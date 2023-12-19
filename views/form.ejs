@@ -1,0 +1,51 @@
+<!-- views/form.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSRF Example</title>
+  <script>
+    // 초기 로딩 시 토큰을 확인하는 JavaScript 코드
+    document.addEventListener('DOMContentLoaded', function () {
+      // 서버에서 제공한 csrfToken 값을 가져와서 변수에 저장
+      var csrfToken = '<%= csrfToken %>';
+alert(csrfToken);
+
+      // 폼 제출 시에 토큰을 추가하여 서버로 전송
+      document.getElementById('myForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // 서버에서 가져온 토큰을 폼 데이터에 추가
+        var formData = new FormData(document.getElementById('myForm'));
+        formData.append('_csrf', csrfToken);
+        alert(csrfToken);
+        // 폼 데이터를 서버로 전송
+        fetch('/process', {
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => response.text())
+        .then(result => {
+	alert(result);
+        })
+        .catch(error => {
+	alert("Error");
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>CSRF Example</h1>
+  
+  <form id="myForm" action="/process" method="post">
+    <!-- 여기에 다른 폼 필드들을 추가 -->
+
+    <!-- 이 부분에 토큰을 체크하는 코드는 불필요합니다. -->
+    
+    <input type="text" name="_csrf" value="<%= csrfToken %>">
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

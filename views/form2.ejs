@@ -1,0 +1,21 @@
+<!-- views/form.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSRF Example</title>
+</head>
+<body>
+  <h1>CSRF Example</h1>
+  
+  <form action="/process" method="post">
+    <!-- csurf 토큰을 포함한 hidden 필드 -->
+    <input type="text" name="_csrf" value="<%= csrfToken %>">
+    
+    <!-- 여기에 다른 폼 필드들을 추가 -->
+    
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
