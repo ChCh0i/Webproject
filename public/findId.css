@@ -1,0 +1,64 @@
+body {
+    font-family: 'archivo black';
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+#index {
+  text-align:center;
+}
+
+#idsearch {
+  text-align:center;
+}
+
+a {
+  text-decoration: none;
+  color : black;
+  font-size : 28px;
+}
+
+
+form {
+  margin: 0 auto;
+  width: 300px;
+}
+
+input {
+  width: 92%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  margin-top: 10px;  // <-- 이 부분을 변경
+}
+
+button:hover {
+    background-color: white;
+    color : black;
+  }
+  
+.error {
+    color: red;
+  }
+  
+.id-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top:50%;
+  }

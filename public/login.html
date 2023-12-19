@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="./login.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+  <form action="/login" method="post">
+      <div class="login-container">
+          <h2 id="login">Login</h2>
+
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" required>
+
+          <br>
+
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+          <a id="idbtn" href="./findId.html">아이디찾기</a>
+          <sapn>|</sapn>
+          <a id="pwbtn" href="./findPassword.html">비밀번호찾기</a>
+          <br>
+
+          <button id="loginbtn" type="submit" onclick="submitLoginForm()">Login</button>
+
+          <button id="regibtn" type="button" onclick="goToRegisterPage()">Register</button>
+
+      </div>
+  </form>
+
+  <script>
+    function submitLoginForm() {
+        event.preventDefault();
+
+        var formData = {
+            'username': $('#username').val(),
+            'password': $('#password').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/login',
+            data: formData,
+            success: function (data) {
+                window.location.href = "./index.html";
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    $('#loginbtn').text('Login Failed');
+                }
+            }
+        });
+    }
+
+    function goToRegisterPage() {
+        // Register 페이지로 이동하는 코드
+        window.location.href = "./regi.html";
+    }
+</script>
+</body>
+</html>

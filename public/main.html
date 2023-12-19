@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Hippo</title>
+        <link rel="stylesheet" href="./style.css" />
+        <script src="https://kit.fontawesome.com/39996071eb.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="navbar_logo">
+                <i class="fa-solid fa-hippo"></i>
+                <a href="#">HIPPO</a>
+            </div>
+            <ul class="navbar_menu">
+                <li><a href="#">Home</a></li>
+                <li><a href="./about.html">about</a></li>
+                <li><a href="./commu.html">Community</a></li>
+                <li><a href="./help.html">Help</a></li>
+            </ul>
+            <ul class="navbar_link">
+                <!-- Regist 또는 Profile 버튼을 보여주는 부분 -->
+                    <li><a href="./profile.html" id="profileBtn">Profile</a></li>
+                    <!-- <li>|</li> -->
+                    <li><a onclick="logout()" href="index.html" id="logoutBtn">Logout</a></li>
+                    <li><a href="./regi.html" id="registBtn">Regist</a></li>
+                    <!-- <li>|</li> -->
+                    <li><a href="./login.html" id="loginBtn">Login</a></li>
+            </ul>
+        </nav>
+
+
+        <section class="slideshow-container">
+            <div class="Slideback">
+                <div class="mySlides fade">
+                    <img src="./public/static/hippo1.jpeg" class="slideshow-image">
+                    <div class="bottom-container">
+                        <h1 class="image_text">하마가 궁금하신가요?</h1>
+                        <h2 class="image_text2">커뮤니티에 접속하세요.</h2>
+                        <a href="./commu.html"><button class="image_btn"><strong>GO</strong></button></a>
+                    </div>
+                </div>
+                <div class="mySlides fade">
+                    <img src="./public/static/hippo2.jpeg" class="slideshow-image">
+                    <h1 class="image_text">하마가 궁금하신가요?</h1>
+                    <h2 class="image_text2">커뮤니티에 접속하세요.</h2>
+                    <a href="./commu.html"><button class="image_btn"><strong>GO</strong></button></a>
+                </div>
+                <div class="mySlides fade">
+                    <img src="./public/static/hippo3.jpeg" class="slideshow-image">
+                    <h1 class="image_text">하마가 궁금하신가요?</h1>
+                    <h2 class="image_text2">커뮤니티에 접속하세요.</h2>
+                    <a href="./commu.html"><button class="image_btn"><strong>GO</strong></button></a>
+                </div>
+            </div>
+        </section>
+
+        <section id="two">
+            <div class="main-text"><h1>HIPPO를 이용해야하는 이유?</h1></div>
+            <div class="circle"><i class="fa-solid fa-gift"></i></div>
+            <div class="circle-text"><h1>EVENT</h1><h2>매주 다양한 이벤트 제공!</h2></div>
+            <div class="circle2"><i class="fa-solid fa-camera"></i></div>
+            <div class="circle-text2"><h1>PHOTO</h1><h2>다양한 플랫폼 활성화!</h2></div>
+            <div class="circle3"><i class="fa-solid fa-users"></i></div>
+            <div class="circle-text3"><h1>COMMUNITY</h1><h2>유저들과의 소통의 장!</h2></div>
+        </section>
+        <section id="three">
+            <div class="main-text"><h1><strong>INFO</strong></h1></div>
+            <div class="info-text"><h3>Hippo 플랫폼은 여러 커뮤니케이션 및 웹 페이지 개발<br>목적으로 만들어진 사이트입니다.<br><br>보안을 더욱 철저하게 가봅시다잉!</h3></div>
+        </section>
+        <section id="contact">
+            <h1>HIPPO MENUAL</h1>
+            <h2>대표 : 최준원 | 소재지 : 대구광역시 남구 현충로170 협동관4층</h2>
+            <h2>팀원 : 강세현, 전동혁, 서혁준 | 팀명 : 3팀</h2>
+            <h2>학번 : 2237049 | 2237021 | 2237027 | 2237037</h2>
+            <div class="small-circle"><a href="https://github.com"><i class="fa-brands fa-github"></i></a></div>
+            <div class="small-circle2" ><a href="https://secure.ync.ac.kr"><i class="fa-solid fa-school"></i></a></div>
+            <div class="small-circle3"><a href="#"><i class="fa-solid fa-turn-up"></i></a></div>
+        </section>
+        <script src="./public/js/image.js"></script>
+        <script src="./public/js/scroll.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+        <script>
+ $(document).ready(function() {
+    loadUserData();
+});
+
+// 사용자 정보 불러오기
+function loadUserData() {
+    // AJAX를 통해 서버로부터 사용자 정보 받아오기
+    $.ajax({
+        type: 'GET',
+        url: '/',
+        success: function (data) {
+            // 로그인 상태일 때
+            //alert("로그인 되있음");
+            $('#registBtn').hide();
+            $('#loginBtn').hide();
+            $('#profileBtn').show();
+            $('#logoutBtn').show();
+        },
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                // 로그인 상태가 아닐 때
+                //alert("로그인 X");
+                $('#registBtn').show();
+                $('#loginBtn').show();
+                $('#profileBtn').hide();
+                $('#logoutBtn').hide();
+            }
+        }
+    });
+}
+
+
+function logout() {
+    // AJAX를 통해 서버로부터 사용자 정보 받아오기
+    $.ajax({
+        type: 'POST',
+        url: '/logout',
+        success: function (data) {
+            // 로그인 상태일 때
+            //alert("로그인 되있음");
+            $('#registBtn').show();
+            $('#loginBtn').show();
+            $('#profileBtn').hide();
+            $('#logoutBtn').hide();
+        },
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                // 로그인 상태가 아닐 때
+                //alert("로그인 X");
+                $('#registBtn').hide();
+                $('#loginBtn').hide();
+                $('#profileBtn').show();
+                $('#logoutBtn').show();
+            }
+        }
+    });
+}
+    </script>
+    </body>
+</html>

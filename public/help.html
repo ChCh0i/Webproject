@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help</title>
+    <link rel="stylesheet" href="help.css" />
+    <script src="https://kit.fontawesome.com/39996071eb.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar_logo">
+            <i class="fa-solid fa-hippo"></i>
+            <a href="index.html">HIPPO</a>
+        </div>
+        <ul class="navbar_menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">about</a></li>
+            <li><a href="commu.html">Community</a></li>
+            <li><a href="#">Help</a></li>
+        </ul>
+        <ul class="navbar_link">
+
+        </ul>
+    </nav>
+
+    <section id="void"></section>
+
+    <section id="help">
+        <div class="main-text"><h1><strong>HELP</strong></h1></div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search" />
+            <button type="submit" onclick="search()"><i class="fa-solid fa-search"></i></button>
+        </div>
+    </section>
+    <div id="board" class="board_list">
+        <div class="board">
+            
+            <section id="q1">
+                <div class="num">[계정분실]</div>
+                <div class="title">
+                    <span class="subject">ID/비밀번호를 분실했어요.</span>
+                </div>
+                <div class="answer">
+                	A. ID 또는 비밀번호를 분실하신 경우, 홈페이지 로그인 페이지 하단에 있는 아이디찾기/비밀번호 찾기를 클릭하시면 찾을 수 있습니다.
+                </div>
+            </section>
+            
+            <section id="q2">
+                <div class="num">[홈페이지 관련]</div>
+                <div class="title">
+                    <span class="subject">이 홈페이지는 어떠한 일을 하나요?</span>
+                </div>
+                <div class="answer">
+                	A. 저희 홈페이지는 하마를 찾는 모험가들을 위한 홈페이지 입니다.
+                </div>
+            </section>
+
+            <section id="q3">
+                <div class="num">[기타]</div>
+                <div class="title">
+                    <span class="subject">안녕하세요</span>
+                </div>
+                <div class="answer">
+                	A. 적당히 바람이 시원해 기분이 너무 좋아요 유후 
+                </div>
+            </section>
+
+            <section id="q4">
+                <div class="num">[역사]</div>
+                <div class="title">
+                    <span class="subject">독도는 우리땅 </span>
+                </div>
+                <div class="answer">
+                	A. 울릉도 동남쪽 백길따라 이백리 새로운 섬하나 새들의 고향<br/>
+                    그누가 아무리 자기네 땅이라고 우겨도 독도는 우리땅
+                </div>
+            </section>
+
+            <section id="q5">
+                <div class="num">[학교]</div>
+                <div class="title">
+                    <span class="subject">영남이공대 화이팅 </span>
+                </div>
+                <div class="answer">
+                	A. 영남이공대 화이팅
+                </div>
+            </section>
+            
+        </div>
+    </div>
+    
+    <section id="contact">
+        <h1>HIPPO MENUAL</h1>
+        <h2>대표 : 최준원 | 소재지 : 대구광역시 남구 현충로170 협동관4층</h2>
+        <h2>팀원 : 강세현, 전동혁, 서혁준 | 팀명 : 3팀</h2>
+        <h2>학번 : 2237049 | 2237021 | 2237027 | 2237037</h2>
+        <div class="small-circle"><i class="fa-brands fa-github"></i></div>
+        <div class="small-circle2"><a href="#"><i class="fa-solid fa-school"></i></a></div>
+    </section>
+
+    <script src="image.js"></script>
+    <script src="scroll.js"></script>
+
+    <script>
+                function search() {
+            const searchTerm = document.querySelector('.search-bar input').value;
+
+            // AJAX 요청 생성
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:3000/search', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            // 요청 본문 설정
+            const data = JSON.stringify({ searchTerm: searchTerm });
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const results = JSON.parse(xhr.responseText);
+                    displayResultsInNewWindow(results);
+                }
+            };
+
+            // 서버로 요청 전송
+            xhr.send(data);
+        }
+
+        function displayResultsInNewWindow(results) {
+            if (results.length === 0) {
+                alert('No results found.');
+                return;
+            }
+
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write('<html><head></head><body>');
+
+            results.forEach(result => {
+                const section = document.createElement('section');
+                section.innerHTML = `
+                    <div class="num">${result.num}</div>
+                    <div class="title">
+                        <span class="subject">${result.title}</span>
+                    </div>
+                    <div class="answer">
+                        ${result.answer}
+                    </div>
+                `;
+                newWindow.document.body.appendChild(section);
+            });
+
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWChange</title>
+    <link rel="stylesheet" href="./pwch.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+  <form action="/update_password" method="post">
+      <div class="pwch-container">
+          <h2 id="pwch">PasswordChange</h2>
+
+          <label for="password">oldpassword:</label>
+          <input type="text" id="password" name="password" required>
+
+          <br>
+
+          <label for="changepassword">ChangePassword:</label>
+          <input type="text" id="changepassword" name="changepassword" required>
+    
+          <br>
+          
+          <label for="passwordConfirm">PasswordConfirm:</label>
+          <input type="text" id="passwordConfirm" name="passwordConfirm" required>
+
+          <br>
+
+          <button id="pwchbtn" type="submit" onclick="passwdch()">Password Change</button>
+      </div>
+  </form>
+  <script>
+function passwdch() {
+    event.preventDefault();
+
+    var password = $("#password").val();
+    var changepassword = $("#changepassword").val();
+    var passwordConfirm = $("#passwordConfirm").val();
+
+    if (password == "" || changepassword == "" || passwordConfirm == "") {
+        alert("빈 칸 입니다.");
+        return;
+    }
+
+    var passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,64}$/;
+    if (!passwordRegex.test(changepassword)) {
+        alert("비밀번호는 반드시 특수문자를 1개 이상 포함하고 8자 이상 64자 이하여야 합니다.");
+        return;
+    }
+
+    // 패스워드 확인
+    if (changepassword !== passwordConfirm) {
+        alert("Password do not match.");
+        return;
+    }
+
+    if (changepassword == password) {
+        alert("Your password is the same as before.");
+        return;
+    }
+
+    var formData = {
+        password: password,
+        changepassword: changepassword,
+        // passwordConfirm: passwordConfirm
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '/update_password',
+        data: formData,
+        success: function (data) {
+            alert("비밀번호가 정상적으로 변경되었습니다. 다시 로그인 해주세요.");
+            window.location.href = "./login.html"; //일단 regi 원래는 index.html
+        },
+        error: function (xhr, status, error) {
+            if (xhr.status == 401) {
+                alert("비밀번호 변경 실패: " + xhr.responseText);
+            }
+        }
+    });
+}
+  </script>
+</body>
+</html>

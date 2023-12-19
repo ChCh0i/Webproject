@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community</title>
+    <!-- 부트스트랩 CDN을 사용하여 스타일 추가 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 10%;
+        }
+        .container {
+            margin-top: 100px; /* 본문을 아래로 위치시키기 위한 마진 설정 */
+        }
+        .pagination-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .pagination {
+            display: flex;
+            list-style: none;
+            cursor: pointer;
+        }
+        .pagination li {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+
+    <!-- 검색창 -->
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="게시글 제목 검색" id="searchInput">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onclick="searchPost()">검색</button>
+        </div>
+    </div>
+
+    <!-- 게시물 목록 -->
+    <ul id="postList" class="list-group">
+        <!-- 여기에 동적으로 게시물이 추가될 것입니다. -->
+    </ul>
+    
+
+    <!-- 글 작성 버튼 -->
+    <button type="button" class="btn btn-primary mt-3" onclick="showPostForm()">글 작성</button>
+
+    <!-- 게시물 작성 폼 -->
+    <form id="postForm" style="display: none;">
+        <div class="form-group">
+            <label for="title">제목:</label>
+            <input type="text" class="form-control" id="title" required>
+        </div>
+        <div class="form-group">
+            <label for="content">내용:</label>
+            <textarea class="form-control" id="content" rows="5" maxlength="400" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="password">게시글 비밀번호:</label>
+            <input type="password" class="form-control" id="password" required>
+        </div>
+        <button type="button" class="btn btn-success" onclick="addPost()">게시물 추가</button>
+    </form>
+
+    <!-- 게시물 상세 보기 모달 -->
+    <div class="modal fade" id="postDetailModal" tabindex="-1" role="dialog" aria-labelledby="postDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="postDetailModalLabel">게시물 상세 보기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="postDetailContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="showModifyDeleteModal()">수정 및 삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게시물 수정 및 삭제 모달 -->
+    <div class="modal fade" id="modifyDeleteModal" tabindex="-1" role="dialog" aria-labelledby="modifyDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modifyDeleteModalLabel">게시물 수정 및 삭제</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="modifyPassword">게시글 비밀번호:</label>
+                        <input type="password" class="form-control" id="modifyPassword" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="showPostModifyForm()">수정</button>
+                    <button type="button" class="btn btn-danger" onclick="deletePost()">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 게시물 수정 폼 -->
+    <form id="postModifyForm" style="display: none;">
+        <div class="form-group">
+            <label for="modifiedContent">수정 내용:</label>
+            <textarea class="form-control" id="modifiedContent" rows="5" maxlength="400" required></textarea>
+        </div>
+        <button type="button" class="btn btn-success" onclick="modifyPost()">수정 완료</button>
+    </form>
+</div>
+
+<!-- 부트스트랩 및 jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    let posts = []; // 게시물 목록 배열
+    let currentPostIndex; // 현재 선택된 게시물 인덱스
+
+    // 게시물 추가 함수
+    function addPost() {
+        const title = filterScript(document.getElementById('title').value);
+        const content = filterScript(document.getElementById('content').value);
+        const password = filterScript(document.getElementById('password').value);
+
+        if (title && content && password) {
+            const sessionId = getCookie('sessionId'); // Get session ID from cookie (simplified)
+            const newPost = { title, content, password, author: sessionId };
+            posts.push(newPost);
+            updatePostList();
+            clearPostForm();
+            $('#postForm').hide();
+        } else {
+            alert('제목, 내용, 비밀번호를 모두 입력하세요.');
+        }
+    }
+
+    // 스크립트 필터링 함수
+    function filterScript(text) {
+        const lowerCaseText = text.toLowerCase();
+    
+        if (lowerCaseText.includes('<script')) {
+            // You can take action here, such as blocking the submission and displaying an error message.
+            alert('스크립트는 허용되지 않습니다.');
+            return ''; // or return a sanitized version of the text
+        }
+
+        return text;
+    }
+
+    // 게시물 목록 업데이트 함수
+    function updatePostList() {
+        const postListElement = document.getElementById('postList');
+        postListElement.innerHTML = ''; // 목록을 초기화
+
+        posts.forEach((post, index) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item';
+            listItem.innerHTML = `<span class="badge badge-secondary">${index + 1}</span> ${post.author ? post.author + ' | ' : ''}<a href="#" onclick="showPostDetail(${index})">${post.title}</a>`;
+            postListElement.appendChild(listItem);
+        });
+    }
+
+    // 게시물 상세 보기 함수
+    function showPostDetail(index) {
+        currentPostIndex = index;
+        const post = posts[index];
+        const postDetailContentElement = document.getElementById('postDetailContent');
+        postDetailContentElement.innerHTML = `<h4>${post.title}</h4><p>${post.content}</p>`;
+        $('#postDetailModal').modal('show');
+    }
+
+    // 수정 및 삭제 모달 표시 함수
+    function showModifyDeleteModal() {
+        $('#modifyDeleteModal').modal('show');
+    }
+
+    // 게시물 작성 폼 표시 함수
+    function showPostForm() {
+        // 글 작성 폼 표시 시 수정 폼 숨기기
+        $('#postModifyForm').hide();
+        clearPostForm();
+        $('#postForm').show();
+    }
+
+    // 게시물 수정 폼 표시 함수
+    function showPostModifyForm() {
+        const post = posts[currentPostIndex];
+        const modifyPassword = document.getElementById('modifyPassword').value;
+
+        if (modifyPassword === post.password) {
+            $('#modifyDeleteModal').modal('hide');
+            document.getElementById('modifiedContent').value = post.content;
+            $('#postModifyForm').show();
+        } else {
+            alert('비밀번호가 일치하지 않습니다.');
+        }
+    }
+
+    // 게시물 수정 함수
+    function modifyPost() {
+        const modifiedContent = document.getElementById('modifiedContent').value;
+        posts[currentPostIndex].content = modifiedContent;
+        updatePostList();
+        $('#postModifyForm').hide();
+    }
+
+    // 게시물 삭제 함수
+    function deletePost() {
+        const post = posts[currentPostIndex];
+        const modifyPassword = document.getElementById('modifyPassword').value;
+
+        if (modifyPassword === post.password) {
+            posts.splice(currentPostIndex, 1);
+            updatePostList();
+            $('#modifyDeleteModal').modal('hide');
+        } else {
+            alert('비밀번호가 일치하지 않습니다.');
+        }
+    }
+
+    // 검색 함수
+    function searchPost() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const filteredPosts = posts.filter(post => post.title.toLowerCase().includes(searchInput));
+        posts = filteredPosts;
+        updatePostList();
+    }
+
+    // 글 작성 폼 초기화 함수
+    function clearPostForm() {
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        document.getElementById('password').value = '';
+        $('#postForm').hide();
+        $('#modifyDeleteModal').modal('hide');
+        $('#postModifyForm').hide();
+    }
+
+    // 초기 게시물 목록
+    // 초기에는 고정된 데이터로 테스트, 실제 사용 시 서버에서 데이터를 받아오는 형태로 수정 필요
+    posts = [
+        { title: '게시물 1', content: '내용 1', password: '1234', author: 'User1' },
+        { title: '게시물 2', content: '내용 2', password: '5678', author: 'User2' },
+        // ... 기타 초기 데이터
+    ];
+
+    // 초기 게시물 목록 업데이트
+    updatePostList();
+
+    // Cookie 관련 함수 (간단하게 구현)
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        const expires = 'expires=' + date.toUTCString();
+        document.cookie = name + '=' + value + ';' + expires + ';path=/';
+    }
+
+    function getCookie(name) {
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const cookieArray = decodedCookie.split(';');
+        for (let i = 0; i < cookieArray.length; i++) {
+            let cookie = cookieArray[i];
+            while (cookie.charAt(0) === ' ') {
+                cookie = cookie.substring(1);
+            }
+            if (cookie.indexOf(name + '=') === 0) {
+                return cookie.substring(name.length + 1, cookie.length);
+            }
+        }
+        return '';
+    }
+</script>
+
+</body>
+</html>

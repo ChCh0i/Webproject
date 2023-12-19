@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find ID</title>
+    <link rel="stylesheet" href="./findId.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+  <form action="/findId" method="post">
+      <div class="id-container">
+          <h2 id="idsearch">Find ID</h2>
+
+          <label for="name">name:</label>
+          <input type="text" id="name" name="name" required>  <!--name=이름, Username=아이디 -->
+
+          <br>
+
+          <label for="email">email:</label>
+          <input type="text" id="email" name="email" required>
+
+          <br>
+
+
+          <button id="idfinds" type="buttont" onclick="idfind()">ID찾기</button>
+      </div>
+  </form>
+  <script>
+    function idfind() {
+
+        var formData = {
+            'name': $('#name').val(),
+            'email': $('#email').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/findId',
+            data: formData,
+            success: function (data) {
+                alert("ID조회에 성공했습니다.");
+	     alert(data);
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    alert("계정정보가 존재하지 않습니다.");
+                }
+            }
+        });
+    }
+
+  </script>
+</body>
+</html>

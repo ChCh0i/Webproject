@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="profile.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+
+  </script>
+</head>
+<body>
+      <form action="/upload" method="post" enctype="multipart/form-data">
+      
+        <div class="profile-container">         
+            <div class="profile-container">
+              <h2 id="profile">Profile</h2>
+              <button id="pwchange" type="button" onclick="pwch()">비밀변호 변경</button>
+              <img src="profile.png" alt="Profile Image" class="profile-image">
+
+              <div class="form-group">
+                  <!-- <label for="profileImage">프로필 이미지 변경</label> -->
+                  <input type="file" name="image" accept="image/*">
+                  <button id="fileupload" type="button" onclick="uploadImage()">Upload</button>
+              </div>
+              
+  
+
+            <div class="profile-details">
+                <div class="form-group">
+                    <label for="name">이름</label>
+                    <input type="text" class="form-control" id="name" name="name" value="${ user.name }" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="username">ID</label>
+                    <input type="text" class="form-control" id="username" name="username" value="${ user.username }" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input type="email" class="form-control" id="email" name="email" value="${ user.email }" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="comment">소개</label>
+                    <textarea id="comment" name="comment" placeholder="간단히 자기소개를 작성해 주세요." value="${ user.comment }"></textarea>
+                    <button id="commentbtn" type="button" onclick="updateIntro()">저장</button>
+                </div>
+
+                <br>
+
+            </div>
+        </div>
+        <script>
+        $(document).ready(function() {
+            loadUserData();
+          });
+      
+          // 사용자 정보 불러오기
+
+          function loadUserData() {
+            // AJAX를 통해 서버로부터 사용자 정보 받아오기
+            $.ajax({
+              type: 'POST',
+              url: '/profile',
+              success: function (data) {
+                // 받아온 데이터를 각 필드에 설정
+                $("#name").val(data.name);
+                $("#username").val(data.username);
+                $("#email").val(data.email);
+                $("#comment").val(data.comment);
+                //alert("조회에 성공했습니다.");
+                //$("#intro").val(data.intro);
+              },
+              error: function (xhr, status, error) {
+                window.location.href = "./main.html";
+              }
+            });
+          }
+      
+          // 소개 업데이트
+          function updateIntro() {
+            var intro = $("#comment").val();
+            //alert("updateIntro()");
+            // AJAX를 통해 서버에 소개 업데이트 요청 보내기
+            $.ajax({
+              type: 'POST',
+              url: '/update_comment',
+              data: {
+                user_id: $("#userId").val(),
+                intro: intro
+              },
+              success: function (data) {
+                alert("소개가 성공적으로 업데이트되었습니다.");
+              },
+              error: function (xhr, status, error) {
+                alert("소개 업데이트에 실패하였습니다.");
+              }
+            });
+          }
+
+        function pwch() {
+        window.location.href = "./pwch.html";
+    }
+
+    function uploadImage() {
+       var formData = new FormData($('form')[0]);
+       $.ajax({
+           type: 'POST',
+           url: '/upload',
+           data: formData,
+           contentType: false,
+           processData: false,
+           success: function (data) {
+             $("#username").val(data.username);
+              // 업로드 성공 시 서버에서 반환한 데이터를 처리
+               console.log(data);
+               alert("이미지 업로드에 성공했습니다.");
+           },
+          error: function (xhr, status, error) {
+               console.error("이미지 업로드에 실패하였습니다.");
+           }
+       });
+   }
+
+
+</script>
+</body>
+</html>

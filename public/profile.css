@@ -1,0 +1,109 @@
+body {
+    font-family: 'archivo black';
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+  
+.profile-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+}
+  
+.profile-image {
+    border-radius: 10%;
+    width: 5.5cm;
+    height: 4.5cm;
+}
+  
+.profile-details {
+    text-align: left;
+    margin-top: 20px;
+}
+  
+.profile-details h2 {
+    color: #333;
+}
+  
+.profile-details p {
+    color: #666;
+}
+
+label {
+    font-size:20px;
+    font-family: 'archivo black';
+}
+input {
+    width: 96.5%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 28px;
+}
+
+#commentbtn{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 20%;
+    border: none;
+    cursor: pointer;
+}
+#commentbtn:hover{
+    background-color: white;
+    color:black;
+}
+
+
+#pwchange{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 20%;
+    border: none;
+    cursor: pointer;
+    margin-left:80%;
+}
+
+#pwchange:hover{
+    background-color: white;
+    color:black;
+}
+
+#index {
+    text-align: center;
+}
+
+#profile {
+    text-align: center;
+}
+
+#comment {
+    width: 96.5%;
+    height: 5.25cm;
+    resize: none;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#password {
+    border: 1px solid #ccc;
+}
+
+#passwordConfirm {
+    border: 1px solid #ccc;
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="./regi.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+
+  <form action="/regi" method="post">
+      <div class="register-container">
+          <h2 id="regi">Register</h2>
+
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required><br>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required><br>
+
+          <label for="username">ID:</label>
+          <input type="text" id="username" name="username" required><br>
+
+          <label for="password">Password:</label>
+          <input type="text" id="password" name="password" required><br>
+
+          <label for="passwordConfirm">Confirm Password:</label>
+          <input type="text" id="passwordConfirm" name="passwordConfirm" required><br>
+
+          <button id="regbtn" type="submit" onclick="submitForm()">Register</button>
+      </div>
+</form>
+
+
+  <script>
+    function submitForm() {
+      event.preventDefault();
+      var id = $("#username").val();
+      var email = $("#email").val();
+      var name = $("#name").val();
+      var password = $("#password").val();
+      var passwordConfirm = $("#passwordConfirm").val();
+
+      if (id == "" || email == "" || name == "" || password == "" || passwordConfirm == "") {
+            alert("빈 칸 입니다.");
+            return;
+        }
+      // 패스워드 확인
+      if (password !== passwordConfirm) {
+        alert("Password do not match.");
+        return;
+      }
+    //   else {
+	//       submitLoginForm();
+    //     //window.location.href = "{% url 'index' %}";
+    //     }
+        var passwordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert("비밀번호는 반드시 특수문자를 1개 이상 포함하고 8자 이상 64자 이하여야 합니다.");
+                return; 
+            }
+        submitLoginForm();
+    }
+		// 회원가입 성공시 스크립트 메박 실행(회원가입 완료 후 메인페이지 넘어감)
+		// 이미 존재하는 사용자일 경우 401응답코드 받아서 존재하는 ID입니다 메박
+	function submitLoginForm() {
+        event.preventDefault();
+
+        var formData = {
+            'username': $('#username').val(),
+            'password': $('#password').val(),
+			'email': $('#email').val(),
+		    'name': $('#name').val(),
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/regi',
+            data: formData,
+            success: function (data) {
+			
+			    alert("회원가입이 정상적으로 되었습니다.");
+				
+                window.location.href = "./login.html"; //일단 regi 원래는 index.html
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status == 401) {
+                    alert("계정정보가 이미 존재합니다.");
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
